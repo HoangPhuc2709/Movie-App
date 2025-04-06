@@ -72,13 +72,6 @@ const CustomDrawerContent = (props) => {
                         <UserIcon size={28} color={theme.colors.text} />
                     </View>
                     <Text
-                        style={[styles.userName, { color: theme.colors.text }]}
-                    >
-                        {isLoggedIn
-                            ? userEmail?.split("@")[0] || "Người dùng"
-                            : "Khách"}
-                    </Text>
-                    <Text
                         style={[
                             styles.userEmail,
                             { color: theme.colors.secondary },

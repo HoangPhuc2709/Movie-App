@@ -7,15 +7,14 @@ import {
     StyleSheet,
     ImageBackground,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API } from "../api/api";
 import { AuthContext } from "../components/context/AuthContext";
-
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    const { login } = useContext(AuthContext);
-
+    const { setIsLoggedIn } = useContext(AuthContext);
     const handleLogin = async () => {
         if (!email || !password) {
             setMessage("Vui lòng nhập đầy đủ Email và Mật khẩu");
@@ -24,11 +23,13 @@ export default function LoginScreen({ navigation }) {
 
         try {
             const res = await API.post("/auth/login", { email, password });
+            const token = res.data.token;
 
-            if (res.data.token && res.data.user?.email) {
-                await login(res.data.token, res.data.user.email);
+            if (token) {
+                await AsyncStorage.setItem("token", token);
+                setIsLoggedIn(true);
             } else {
-                setMessage("Dữ liệu đăng nhập không hợp lệ từ server");
+                setMessage("Không nhận được token từ server.");
             }
         } catch (err) {
             setMessage(

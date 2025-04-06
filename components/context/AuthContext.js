@@ -1,4 +1,3 @@
-// context/AuthContext.js
 import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -51,7 +50,6 @@ export const AuthProvider = ({ children }) => {
             value={{
                 isLoggedIn,
                 userEmail,
-                setIsLoggedIn,
                 login,
                 logout,
             }}

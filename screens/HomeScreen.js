@@ -23,9 +23,10 @@ import {
     fetchTrendingMovies,
     fetchUpcomingMovies,
 } from "../api/moviedb";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Loading from "../components/loading";
 import { useTheme } from "../components/context/ThemeContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ios = Platform.OS === "ios";
 const HEADER_HEIGHT = ios ? 60 : 70;
@@ -34,6 +35,7 @@ export default function HomeScreen() {
     const [trending, setTrending] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
     const [topRated, setTopRated] = useState([]);
+    const [recentlySeen, setRecentlySeen] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
     const { theme, isDarkMode } = useTheme();
@@ -47,6 +49,12 @@ export default function HomeScreen() {
         loadData();
         startAnimations();
     }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            loadRecentlySeen();
+        }, [])
+    );
 
     const loadData = async () => {
         try {
@@ -64,6 +72,15 @@ export default function HomeScreen() {
             console.error("Error fetching data:", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const loadRecentlySeen = async () => {
+        try {
+            const data = await AsyncStorage.getItem("recentlySeen");
+            if (data) setRecentlySeen(JSON.parse(data));
+        } catch (error) {
+            console.error("Error loading recently seen movies:", error);
         }
     };
 
@@ -98,6 +115,8 @@ export default function HomeScreen() {
             navigation.navigate("Upcoming");
         } else if (type === "top_rated") {
             navigation.navigate("TopRated");
+        } else if (type === "recently_seen") {
+            navigation.navigate("RecentlySeen");
         }
     };
 
@@ -106,18 +125,23 @@ export default function HomeScreen() {
             <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
                 {title}
             </Text>
-            <TouchableOpacity
-                style={styles.seeAllButton}
-                onPress={() => handleSeeAll(type)}
-                activeOpacity={0.6}
-            >
-                <Text
-                    style={[styles.seeAllText, { color: theme.colors.primary }]}
+            {type && (
+                <TouchableOpacity
+                    style={styles.seeAllButton}
+                    onPress={() => handleSeeAll(type)}
+                    activeOpacity={0.6}
                 >
-                    See All
-                </Text>
-                <ChevronRightIcon size={18} color={theme.colors.primary} />
-            </TouchableOpacity>
+                    <Text
+                        style={[
+                            styles.seeAllText,
+                            { color: theme.colors.primary },
+                        ]}
+                    >
+                        See All
+                    </Text>
+                    <ChevronRightIcon size={18} color={theme.colors.primary} />
+                </TouchableOpacity>
+            )}
         </View>
     );
 
@@ -197,6 +221,18 @@ export default function HomeScreen() {
                         data={trending}
                         style={styles.trendingSection}
                     />
+                )}
+
+                {/* Recently Seen Movies */}
+                {recentlySeen.length > 0 && (
+                    <View style={styles.section}>
+                        {renderSectionHeader("Recently Seen", "recently_seen")}
+                        <MovieList
+                            data={recentlySeen.slice(0, 5)}     
+                            hideSeeAll={true}
+                            cardStyle={styles.movieCard}
+                        />
+                    </View>
                 )}
 
                 {/* Upcoming Movies */}
