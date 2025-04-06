@@ -1,55 +1,74 @@
-import React, { createContext, useEffect, useState } from "react";
+// components/context/AuthContext.js
+import React, { createContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
-    const [userEmail, setUserEmail] = useState(null);
+    const [authState, setAuthState] = useState({
+        isLoggedIn: false,
+        userEmail: null,
+        token: null,
+    });
 
-    const checkLogin = async () => {
-        try {
-            const token = await AsyncStorage.getItem("token");
-            const email = await AsyncStorage.getItem("userEmail");
-            setIsLoggedIn(!!token);
-            if (email) setUserEmail(email);
-        } catch (error) {
-            console.error("Error checking login status:", error);
-            setIsLoggedIn(false);
-        }
-    };
+    // Load auth state khi khởi động app
+    useEffect(() => {
+        const loadAuthState = async () => {
+            try {
+                const token = await AsyncStorage.getItem("token");
+                const email = await AsyncStorage.getItem("userEmail");
 
-    const login = async (token, email) => {
+                if (token && email) {
+                    setAuthState({
+                        isLoggedIn: true,
+                        userEmail: email,
+                        token: token,
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading auth state:", error);
+            }
+        };
+
+        loadAuthState();
+    }, []);
+
+    const login = async (email, token) => {
         try {
-            await AsyncStorage.setItem("token", token);
-            await AsyncStorage.setItem("userEmail", email);
-            setIsLoggedIn(true);
-            setUserEmail(email);
+            await AsyncStorage.multiSet([
+                ["token", token],
+                ["userEmail", email],
+            ]);
+
+            setAuthState({
+                isLoggedIn: true,
+                userEmail: email,
+                token: token,
+            });
         } catch (error) {
-            console.error("Error saving login data:", error);
+            console.error("Error saving auth data:", error);
         }
     };
 
     const logout = async () => {
         try {
-            await AsyncStorage.removeItem("token");
-            await AsyncStorage.removeItem("userEmail");
-            setIsLoggedIn(false);
-            setUserEmail(null);
+            await AsyncStorage.multiRemove(["token", "userEmail"]);
+            setAuthState({
+                isLoggedIn: false,
+                userEmail: null,
+                token: null,
+            });
         } catch (error) {
-            console.error("Error during logout:", error);
+            console.error("Error clearing auth data:", error);
         }
     };
-
-    useEffect(() => {
-        checkLogin();
-    }, []);
 
     return (
         <AuthContext.Provider
             value={{
-                isLoggedIn,
-                userEmail,
+                isLoggedIn: authState.isLoggedIn,
+                userEmail: authState.userEmail,
+                token: authState.token,
                 login,
                 logout,
             }}
