@@ -46,6 +46,14 @@ export default function MovieScreen() {
         getMovieCredits(item.id);
         getSimilarMovies(item.id);
     }, [item]);
+    async function saveToRecentlySeen(movieItem) {
+        const data = await AsyncStorage.getItem("recentlySeen");
+        let list = data ? JSON.parse(data) : [];
+        list = list.filter((m) => m.id !== movieItem.id);
+        list.unshift(movieItem);
+        if (list.length > 20) list = list.slice(0, 20);
+        await AsyncStorage.setItem("recentlySeen", JSON.stringify(list));
+    }
 
     async function getMovieDetails(id) {
         const data = await fetchMovieDetails(id);
@@ -186,9 +194,10 @@ export default function MovieScreen() {
                     paddingHorizontal: 20,
                     borderRadius: 100,
                 }}
-                onPress={() =>
-                    navigation.navigate("Trailer", { videoId: trailerKey })
-                }
+                onPress={async () => {
+                    await saveToRecentlySeen(movie);
+                    navigation.navigate("Trailer", { videoId: trailerKey });
+                }}
             >
                 <Text
                     style={{ color: "white", fontWeight: "bold", fontSize: 30 }}

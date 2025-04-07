@@ -14,6 +14,7 @@ import {
     SunIcon,
     MoonIcon,
     ClockIcon,
+    GiftTopIcon,
 } from "react-native-heroicons/outline";
 import HomeScreen from "../screens/HomeScreen";
 import FavoriteScreen from "../screens/FavoriteScreen";
@@ -21,6 +22,7 @@ import UpcomingScreen from "../screens/UpcomingScreen";
 import { AuthContext } from "../components/context/AuthContext";
 import { useTheme } from "../components/context/ThemeContext";
 import TopRatedScreen from "../screens/TopRatedScreen";
+import { FilmIcon } from "react-native-heroicons/solid";
 
 const Drawer = createDrawerNavigator();
 
@@ -220,7 +222,7 @@ export default function DrawerNavigator() {
                 options={{
                     title: "Top Rated Movies",
                     drawerIcon: ({ color }) => (
-                        <ClockIcon size={22} color={color} />
+                        <FilmIcon size={22} color={color} />
                     ),
                 }}
             />

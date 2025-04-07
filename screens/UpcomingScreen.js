@@ -43,7 +43,7 @@ export default function UpcomingScreen() {
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.openDrawer()}>
                     <Bars3CenterLeftIcon
-                        size={30}
+                        size={40}
                         strokeWidth={2}
                         color="red"
                     />

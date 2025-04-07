@@ -226,9 +226,9 @@ export default function HomeScreen() {
                 {/* Recently Seen Movies */}
                 {recentlySeen.length > 0 && (
                     <View style={styles.section}>
-                        {renderSectionHeader("Recently Seen", "recently_seen")}
+                        {/* {renderSectionHeader("Recently Seen", "recently_seen")} */}
                         <MovieList
-                            data={recentlySeen.slice(0, 5)}     
+                            data={recentlySeen.slice(0, 5)}
                             hideSeeAll={true}
                             cardStyle={styles.movieCard}
                         />
