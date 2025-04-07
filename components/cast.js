@@ -7,7 +7,7 @@ import {
     Dimensions,
 } from "react-native";
 import React from "react";
-import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { fallbackPersonImage, image185, image342 } from "../api/moviedb";
 var { width, height } = Dimensions.get("window");
 

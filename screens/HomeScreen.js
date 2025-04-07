@@ -8,7 +8,7 @@ import {
     Easing,
     StyleSheet,
 } from "react-native";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
     Bars3CenterLeftIcon,
@@ -51,7 +51,7 @@ export default function HomeScreen() {
     }, []);
 
     useFocusEffect(
-        React.useCallback(() => {
+        useCallback(() => {
             loadRecentlySeen();
         }, [])
     );
@@ -227,6 +227,14 @@ export default function HomeScreen() {
                 {recentlySeen.length > 0 && (
                     <View style={styles.section}>
                         {/* {renderSectionHeader("Recently Seen", "recently_seen")} */}
+                        <Text
+                            style={[
+                                styles.sectionTitle,
+                                { color: theme.colors.text },
+                            ]}
+                        >
+                            RecentlySeen
+                        </Text>
                         <MovieList
                             data={recentlySeen.slice(0, 5)}
                             hideSeeAll={true}

@@ -88,7 +88,6 @@ export default function MovieScreen() {
     }
 
     const trailerKey = trailerVideoMap[item.id] || "fX3qI4lQ6P0";
-
     return (
         <ScrollView
             contentContainerStyle={{ paddingBottom: 20 }}

@@ -16,7 +16,6 @@ router.post("/register", async (req, res) => {
                 .status(400)
                 .json({ error: "Vui lòng cung cấp email và mật khẩu" });
         }
-
         // Kiểm tra email đã tồn tại
         const existingUser = await User.findOne({ email });
         if (existingUser) {
