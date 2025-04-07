@@ -13,33 +13,35 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { image185 } from "../api/moviedb";
 import { Bars3CenterLeftIcon, XMarkIcon } from "react-native-heroicons/outline";
+import { useFocusEffect } from "@react-navigation/native";  
 
 export default function FavoriteScreen() {
     const [favorites, setFavorites] = useState([]);
     const navigation = useNavigation();
 
     // Load danh sách yêu thích
-    useEffect(() => {
-        const loadFavorites = async () => {
+    useFocusEffect(
+        React.useCallback(() => {
+          const loadFavorites = async () => {
             const fav = await AsyncStorage.getItem("favorites");
             if (fav) setFavorites(JSON.parse(fav));
-        };
-        const unsubscribe = navigation.addListener("focus", loadFavorites);
-        return unsubscribe;
-    }, [navigation]);
+          };
+          loadFavorites();
+        }, [])
+      );
 
     // Hàm xóa phim khỏi danh sách yêu thích
     const removeFavorite = async (movieId) => {
         Alert.alert(
-            "Xác nhận",
-            "Bạn có chắc muốn bỏ phim này khỏi danh sách yêu thích?",
+            "Confirm",
+            "Are you sure you want to remove this movie from your favorites?",
             [
                 {
-                    text: "Hủy",
+                    text: "Cancel",
                     style: "cancel"
                 },
                 {
-                    text: "Đồng ý",
+                    text: "Confirm",
                     onPress: async () => {
                         const updatedFavorites = favorites.filter(
                             item => item.id !== movieId
@@ -63,7 +65,7 @@ export default function FavoriteScreen() {
                 <TouchableOpacity onPress={() => navigation.openDrawer()}>
                     <Bars3CenterLeftIcon size={30} strokeWidth={2} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.title}>Phim Yêu Thích</Text>
+                <Text style={styles.title}>Favorite Movies</Text>
             </View>
 
             {/* Danh sách phim */}
@@ -91,7 +93,7 @@ export default function FavoriteScreen() {
                     </View>
                 ))
             ) : (
-                <Text style={styles.emptyText}>Danh sách yêu thích trống</Text>
+                <Text style={styles.emptyText}>Favorites list is empty</Text>
             )}
         </ScrollView>
     );

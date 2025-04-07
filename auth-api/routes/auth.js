@@ -1,4 +1,3 @@
-// auth.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -14,12 +13,12 @@ router.post("/register", async (req, res) => {
         if (!email || !password) {
             return res
                 .status(400)
-                .json({ error: "Vui lòng cung cấp email và mật khẩu" });
+                .json({ error: "Please provide email and password" });
         }
         // Kiểm tra email đã tồn tại
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ error: "Email đã tồn tại" });
+            return res.status(400).json({ error: "Email already exists" });
         }
 
         // Hash password
@@ -41,7 +40,7 @@ router.post("/register", async (req, res) => {
         });
     } catch (e) {
         console.error("Registration error:", e);
-        res.status(500).json({ error: "Lỗi server khi đăng ký" });
+        res.status(500).json({ error: "Server error during registration" });
     }
 });
 
@@ -54,7 +53,7 @@ router.post("/login", async (req, res) => {
         if (!email || !password) {
             return res
                 .status(400)
-                .json({ error: "Vui lòng cung cấp email và mật khẩu" });
+                .json({ error: "Please provide email and password" });
         }
 
         // Tìm user
@@ -62,7 +61,7 @@ router.post("/login", async (req, res) => {
         if (!user) {
             return res
                 .status(400)
-                .json({ error: "Email hoặc mật khẩu không đúng" });
+                .json({ error: "Email or password is incorrect" });
         }
 
         // So sánh mật khẩu
@@ -70,7 +69,7 @@ router.post("/login", async (req, res) => {
         if (!match) {
             return res
                 .status(400)
-                .json({ error: "Email hoặc mật khẩu không đúng" });
+                .json({ error: "Email or password is incorrect" });
         }
 
         // Tạo token
@@ -95,7 +94,7 @@ router.post("/login", async (req, res) => {
         });
     } catch (e) {
         console.error("Login error:", e);
-        res.status(500).json({ error: "Lỗi server khi đăng nhập" });
+        res.status(500).json({ error: "Server error during login" });
     }
 });
 

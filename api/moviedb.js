@@ -128,8 +128,8 @@ export const trailerVideoMap = {
     1140535: "XfSNmYhV8Xc", // PRESENCE
     558449: "4rgYUipGJNo", // Gladiator II
     972533: "sNMyooXZZTM", // Last Breath
-    926670: "HENRY DANGER THE MOVIE", // HENRY DANGER THE MOVIE
-    1064213: "ANORA", // p1HxTmV5i7c
+    926670: "Rcc9veq0JgM", // HENRY DANGER THE MOVIE
+    1064213: "p1HxTmV5i7c", // ANORA
     1407861: "yWNwdsXIBks", // The Bayou
     533535: "73_1biulkYk", // Deadpool & Wolverine
     1286663: "ZxJ-raCdP6w", // Control Freak
