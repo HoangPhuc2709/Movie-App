@@ -48,7 +48,7 @@ export default function UpcomingScreen() {
                         color="red"
                     />
                 </TouchableOpacity>
-                <Text style={styles.title}>Phim Sắp Chiếu</Text>
+                <Text style={styles.title}>Upcoming Movies</Text>
             </View>
 
             {/* Danh sách phim */}
@@ -69,14 +69,14 @@ export default function UpcomingScreen() {
                                 </Text>
                                 <Text style={styles.movieDate}>
                                     {item.release_date ||
-                                        "Chưa có ngày công chiếu"}
+                                        "No release date available"}
                                 </Text>
                             </View>
                         </TouchableOpacity>
                     </View>
                 ))
             ) : (
-                <Text style={styles.emptyText}>Không có phim sắp chiếu</Text>
+                <Text style={styles.emptyText}>No upcoming movies available</Text>
             )}
         </ScrollView>
     );

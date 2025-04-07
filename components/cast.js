@@ -3,13 +3,12 @@ import {
     Text,
     ScrollView,
     TouchableOpacity,
-    Image,
-    Dimensions,
+// context/ThemeContext.js
+    Image
 } from "react-native";
 import React from "react";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { fallbackPersonImage, image185, image342 } from "../api/moviedb";
-var { width, height } = Dimensions.get("window");
 
 export default function Cast({ cast, navigation }) {
     return (

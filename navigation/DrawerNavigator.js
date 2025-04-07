@@ -33,12 +33,12 @@ const CustomDrawerContent = (props) => {
 
     const handleLogout = () => {
         Alert.alert(
-            "Xác nhận đăng xuất",
-            "Bạn có chắc chắn muốn đăng xuất khỏi M-FLIX?",
+            "Confirm Logout",
+            "Are you sure you want to log out from M-FLIX?",
             [
-                { text: "Ở lại", style: "cancel" },
+                { text: "Stay", style: "cancel" },
                 {
-                    text: "Đăng xuất",
+                    text: "Logout",
                     style: "destructive",
                     onPress: async () => {
                         await logout();
@@ -79,7 +79,7 @@ const CustomDrawerContent = (props) => {
                             { color: theme.colors.secondary },
                         ]}
                     >
-                        {isLoggedIn ? userEmail : "Chưa đăng nhập"}
+                        {isLoggedIn ? userEmail : "Not Logged In"}
                     </Text>
                 </View>
             </LinearGradient>
@@ -112,7 +112,7 @@ const CustomDrawerContent = (props) => {
                                     { color: theme.colors.text },
                                 ]}
                             >
-                                Chế độ sáng
+                                Light Mode
                             </Text>
                         </>
                     ) : (
@@ -124,7 +124,7 @@ const CustomDrawerContent = (props) => {
                                     { color: theme.colors.text },
                                 ]}
                             >
-                                Chế độ tối
+                                Dark Mode
                             </Text>
                         </>
                     )}
@@ -151,7 +151,7 @@ const CustomDrawerContent = (props) => {
                                 { color: theme.colors.error },
                             ]}
                         >
-                            Đăng xuất
+                            Logout
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -190,7 +190,7 @@ export default function DrawerNavigator() {
                 name="Home"
                 component={HomeScreen}
                 options={{
-                    title: "Trang chủ",
+                    title: "Home",
                     drawerIcon: ({ color }) => (
                         <HomeIcon size={22} color={color} />
                     ),
@@ -200,7 +200,7 @@ export default function DrawerNavigator() {
                 name="Favorites"
                 component={FavoriteScreen}
                 options={{
-                    title: "Yêu thích",
+                    title: "Favorites",
                     drawerIcon: ({ color }) => (
                         <HeartIcon size={22} color={color} />
                     ),
@@ -210,7 +210,7 @@ export default function DrawerNavigator() {
                 name="Upcoming"
                 component={UpcomingScreen}
                 options={{
-                    title: "Phim sắp chiếu",
+                    title: "Upcoming Movies",
                     drawerIcon: ({ color }) => (
                         <ClockIcon size={22} color={color} />
                     ),

@@ -1,7 +1,5 @@
-// App.js
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { StatusBar } from "react-native";
 import { AuthProvider } from "./components/context/AuthContext";
 import { ThemeProvider } from "./components/context/ThemeContext";
 import AppNavigation from "./navigation/appNavigation";

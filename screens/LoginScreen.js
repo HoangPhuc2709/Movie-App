@@ -21,7 +21,7 @@ export default function LoginScreen({ navigation }) {
 
     const handleLogin = async () => {
         if (!email || !password) {
-            setMessage("Vui lòng nhập đầy đủ Email và Mật khẩu");
+            setMessage("Please enter both Email and Password");
             return;
         }
 
@@ -36,15 +36,15 @@ export default function LoginScreen({ navigation }) {
 
             if (res.data.token) {
                 await login(email, res.data.token); // Truyền cả email và token
-                setMessage("Đăng nhập thành công!");
+                setMessage("Login successful!");
             } else {
-                setMessage("Không nhận được token từ server.");
+                setMessage("No token received from server.");
             }
         } catch (err) {
             const errorMsg =
                 err.response?.data?.error ||
                 err.response?.data?.message ||
-                "Lỗi đăng nhập không xác định";
+                "Unknown login error";
             setMessage(errorMsg);
             console.error("Login error:", err);
         } finally {
@@ -93,7 +93,7 @@ export default function LoginScreen({ navigation }) {
                 </TouchableOpacity>
 
                 <Text style={styles.orBtn}>
-                    or press below button if don't have account
+                    Or press the button below if you don't have an account
                 </Text>
 
                 <TouchableOpacity
@@ -108,7 +108,7 @@ export default function LoginScreen({ navigation }) {
                         style={[
                             styles.message,
                             {
-                                color: message.includes("thành công")
+                                color: message.includes("successful")
                                     ? "green"
                                     : "red",
                             },

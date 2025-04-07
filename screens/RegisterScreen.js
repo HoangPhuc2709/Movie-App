@@ -27,7 +27,7 @@ export default function RegisterScreen({ navigation }) {
 
     try {
       const res = await API.post("/auth/register", { email, password });
-      setMessage("✅ Đăng ký thành công!");
+      setMessage("Đăng ký thành công!");
       setTimeout(() => {
         navigation.navigate("Login");
       }, 1000);
