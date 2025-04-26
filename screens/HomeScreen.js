@@ -27,6 +27,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Loading from "../components/loading";
 import { useTheme } from "../components/context/ThemeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { fetchMoviesByGenre } from "../api/moviedb"; // Adjust path as needed
 
 const ios = Platform.OS === "ios";
 const HEADER_HEIGHT = ios ? 60 : 70;
@@ -39,6 +40,7 @@ export default function HomeScreen() {
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
     const { theme, isDarkMode } = useTheme();
+    const [recommendedMovies, setRecommendedMovies] = useState([]);
 
     // Animation values
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -52,9 +54,24 @@ export default function HomeScreen() {
 
     useFocusEffect(
         useCallback(() => {
-            loadRecentlySeen();
+            const fetchData = async () => {
+                const seen = await loadRecentlySeen();
+                await loadRecommendedMovies(seen);
+            };
+
+            fetchData();
         }, [])
     );
+    // const clearRecentlySeen = async () => {
+    //     try {
+    //         await AsyncStorage.removeItem("recentlySeen");
+    //         setRecentlySeen([]); // Cập nhật state để UI không hiển thị nữa
+    //         alert("Đã xóa danh sách phim đã xem gần đây.");
+    //     } catch (error) {
+    //         console.error("Lỗi khi xóa recentlySeen:", error);
+    //     }
+    // };
+
 
     const loadData = async () => {
         try {
@@ -74,14 +91,62 @@ export default function HomeScreen() {
             setLoading(false);
         }
     };
+    // them loadRecommendedMovies
+    const loadRecommendedMovies = async (seen) => {
+        if (!seen.length) return;
+
+        const topGenres = getMostWatchedGenres(seen);
+        const recommended = [];
+
+        for (let genre of topGenres) {
+            const res = await fetchMoviesByGenre(genre.id);
+            if (res?.results) {
+                const unseen = res.results.filter(
+                    (m) => !seen.find((s) => s.id === m.id)
+                );
+                recommended.push(...unseen.slice(0, 5));
+            }
+        }
+
+        setRecommendedMovies(recommended);
+    };
 
     const loadRecentlySeen = async () => {
         try {
             const data = await AsyncStorage.getItem("recentlySeen");
-            if (data) setRecentlySeen(JSON.parse(data));
+            if (data) {
+                const parsed = JSON.parse(data);
+                setRecentlySeen(parsed);
+                return parsed;
+            }
+            setRecentlySeen([]);
+            return [];
         } catch (error) {
             console.error("Error loading recently seen movies:", error);
+            return [];
         }
+    };
+    // them getMostWatchedGenres
+    const getMostWatchedGenres = (movies) => {
+        const genreCount = {};
+
+        movies.forEach((movie) => {
+            if (movie.genres) {
+                movie.genres.forEach((genre) => {
+                    if (genreCount[genre.id]) {
+                        genreCount[genre.id].count += 1;
+                    } else {
+                        genreCount[genre.id] = { ...genre, count: 1 };
+                    }
+                });
+            }
+        });
+
+        const sortedGenres = Object.values(genreCount).sort(
+            (a, b) => b.count - a.count
+        );
+
+        return sortedGenres.slice(0, 2); // top 2 genres
     };
 
     const startAnimations = () => {
@@ -242,6 +307,20 @@ export default function HomeScreen() {
                         />
                     </View>
                 )}
+                {recommendedMovies.length > 0 && (
+                    <View style={styles.section}>
+                        <Text
+                            style={[styles.sectionTitle, { color: theme.colors.text }]}
+                        >
+                            Recommended for You
+                        </Text>
+                        <MovieList
+                            data={recommendedMovies}
+                            hideSeeAll={true}
+                            cardStyle={styles.movieCard}
+                        />
+                    </View>
+                )}
 
                 {/* Upcoming Movies */}
                 {upcoming.length > 0 && (
@@ -254,6 +333,7 @@ export default function HomeScreen() {
                         />
                     </View>
                 )}
+
 
                 {/* Top Rated Movies */}
                 {topRated.length > 0 && (

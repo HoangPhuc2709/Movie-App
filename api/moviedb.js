@@ -17,6 +17,15 @@ const personDetailsEndpoint = (id) =>
 const personMoviesEndpoint = (id) =>
     `${apiBaseUrl}/person/${id}/movie_credits?api_key=${apiKey}`;
 
+// them fetchMoviesByGenre
+export const fetchMoviesByGenre = async (genreId) => {
+    const res = await fetch(
+        `${apiBaseUrl}/discover/movie?api_key=${apiKey}&with_genres=${genreId}`
+    );
+    return await res.json();
+};
+
+
 export const image500 = (path) =>
     path ? "https://image.tmdb.org/t/p/w500" + path : null;
 export const image342 = (path) =>
